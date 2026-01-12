@@ -11,13 +11,6 @@ CONFIG = {
     "lr1": 1e-4,#encoder用の初期学習率
     "lr2": 1e-4,#aggregator用の学習率
     "weight_decay": 1e-4,
-    
-    # === 凍結制御（論文設定では無効）=== 
-    # NOTE: The default CONFIG reproduces the paper setting.
-    "freeze_aggregator": False,     # Trueで初期凍結
-    "freeze_epochs": 0,            # 最低何epochは凍結を維持するか
-    "grad_threshold": None,        # encoder平均勾配ノルムがこの値を下回ったら解除
-    "aggregator_fixed_lr": None,   # 解除後に固定するaggregatorの学習率
 
     # === Transformer構造 ===
     "num_layers": 4,
@@ -29,7 +22,6 @@ CONFIG = {
     # === Ablationスイッチ ===
     "use_positional_embedding": True,   # Falseにするとnn.Identity()で位置エンコーディングなし
     "use_mlp_aggregator": True,         # Falseにすると単純平均でMLPなし
-
     
     # === データパス ===
     "category_dir": "data/compressed_rank32",
