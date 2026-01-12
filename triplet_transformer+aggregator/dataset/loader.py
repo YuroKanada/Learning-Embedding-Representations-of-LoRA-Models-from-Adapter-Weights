@@ -17,8 +17,8 @@ def load_model_matrix(category_dir, dimension):
     return model_matrix_dict
 
 
-def load_triplets(dataset_dir, train_name, val_name, test_name):
+def load_triplets(dataset_dir, train_name, val_name):
     def _load(fname):
         with open(os.path.join(dataset_dir, fname)) as f:
             return [json.loads(l) for l in f]
-    return _load(train_name), _load(val_name), _load(test_name)
+    return _load(train_name), _load(val_name)
