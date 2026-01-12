@@ -26,13 +26,6 @@ def build_optimizer_scheduler(model, lr1, lr2, weight_decay, batch_size, num_epo
     - warmup終了後はcosineで緩やかに減衰
     """
 
-    # # --- optimizer: encoderとaggregatorでLRを分離 ---
-    # optimizer = AdamW([
-    #     {"params": model.encoder.parameters(), "lr": lr1},   # encoderは安定学習
-    #     {"params": model.aggregator.parameters(), "lr": lr2} # aggregatorは早く適応
-    # ], weight_decay=weight_decay)
-
-
     enc_decay, enc_no_decay = separate_weight_decay_params(model.encoder)
     agg_decay, agg_no_decay = separate_weight_decay_params(model.aggregator)
 
@@ -56,12 +49,6 @@ def build_optimizer_scheduler(model, lr1, lr2, weight_decay, batch_size, num_epo
         # 最低学習率をmin_lr_ratioで下支え
         return min_lr_ratio + (1 - min_lr_ratio) * cosine_decay
 
-    # scheduler = LambdaLR(optimizer, lr_lambda)
-    #aggregatorはlrを固定
-    # scheduler = LambdaLR(
-    #     optimizer,
-    #     lr_lambda=[lr_lambda, lr_lambda, lr_lambda, lambda step: 1.0]
-    # )
     scheduler = LambdaLR(
         optimizer,
         lr_lambda=[lr_lambda, lr_lambda, lr_lambda, lr_lambda]
