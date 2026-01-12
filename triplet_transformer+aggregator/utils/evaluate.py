@@ -23,6 +23,5 @@ def evaluate_triplet_accuracy(model, model_matrix_dict, triplets, device):
                 correct += 1
 
     acc = correct / total if total > 0 else 0
-    # print(f"Triplet Accuracy: {acc:.4f} ({correct}/{total})")
     return acc
 
