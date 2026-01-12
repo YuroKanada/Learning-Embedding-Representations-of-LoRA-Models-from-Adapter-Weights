@@ -38,12 +38,8 @@ class FeedForward(nn.Module):
         super().__init__()
         self.linear1 = nn.Linear(d_model, d_ff)
         self.linear2 = nn.Linear(d_ff, d_model)
-        # # dropout追加
-        # self.dropout = nn.Dropout(dropout)
-
+        
     def forward(self, x):
-        # dropout追加
-        # return self.linear2(self.dropout(F.relu(self.linear1(x))))
         return self.linear2(F.gelu(self.linear1(x)))
     
 class EncoderLayer(nn.Module):
@@ -56,8 +52,7 @@ class EncoderLayer(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, mask=None):
-        
-        #pre-LN
+        #pre-LN 正規化のタイミングを近年採用されるpre-LNに調整
         x1 = self.norm1(x)                     # ← 1回だけ
         attn_out = self.self_attn(x1, x1, x1, mask)
         x = x + self.dropout(attn_out)         # residual
@@ -66,6 +61,7 @@ class EncoderLayer(nn.Module):
         ff_out = self.ff(x2)
         x = x + self.dropout(ff_out)           # residual
         return x
+        
 class LearnablePositionalEmbedding(nn.Module):
     def __init__(self, max_len, d_model):
         super().__init__()
