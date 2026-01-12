@@ -3,11 +3,7 @@ import os
 from utils.evaluate import evaluate_triplet_accuracy
 
 class Trainer:
-    def __init__(
-        self, model, optimizer, scheduler, loss_fn, device, save_dir="saved_models",
-        grad_threshold=0.05, freeze_epochs=2,
-        freeze_aggregator=True, aggregator_fixed_lr=5e-4
-    ):
+    def __init__(self, model, optimizer, scheduler, loss_fn, device, save_dir="saved_models"):
         self.model = model
         self.optimizer = optimizer
         self.scheduler = scheduler
@@ -16,13 +12,8 @@ class Trainer:
         self.save_dir = save_dir
         self.best_acc = 0.0
 
-        # === aggregator制御用 ===
-        self.grad_threshold = grad_threshold
-        self.freeze_epochs = freeze_epochs
-        self.freeze_aggregator = freeze_aggregator
-        self.aggregator_fixed_lr = aggregator_fixed_lr
-        self.aggregator_frozen = freeze_aggregator
 
+            
         os.makedirs(self.save_dir, exist_ok=True)
 
         # aggregatorは常に学習対象
@@ -72,7 +63,6 @@ class Trainer:
                     "lr_aggregator": self.optimizer.param_groups[2]["lr"],
                     "grad_norm_encoder_step": grad_enc_mean,
                     "grad_norm_aggregator_step": grad_agg_mean,
-                    "aggregator_frozen": self.aggregator_frozen,
                     **tracked,
                 })
 
