@@ -11,8 +11,6 @@ class Trainer:
         self.device = device
         self.save_dir = save_dir
         self.best_acc = 0.0
-
-
             
         os.makedirs(self.save_dir, exist_ok=True)
 
