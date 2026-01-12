@@ -19,11 +19,10 @@ wandb.init(project="triplet-image_base", name=f"run_{timestamp}", config=CONFIG)
 model_matrix_dict = load_model_matrix(CONFIG["category_dir"], CONFIG["dimension"])
 
 #データセット変更の場合ここを修正
-train_triplets, val_triplets, test_triplets = load_triplets(
+train_triplets, val_triplets = load_triplets(
     CONFIG["dataset_dir"],
     "triplets_rank32_semi15_easy5_too_easy1.jsonl",
     "triplets_rank32_val_semi10_easy4_too_easy2.jsonl",
-    "triplets_rank32_test_semi10_easy4_too_easy2.jsonl"
 )
 
 #取得したデータセットからモデルの学習データ形式に整形
