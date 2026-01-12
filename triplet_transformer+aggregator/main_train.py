@@ -26,11 +26,7 @@ train_triplets, val_triplets, test_triplets = load_triplets(
     "triplets_rank32_test_semi10_easy4_too_easy2.jsonl"
 )
 
-# train_loader = DataLoader(
-#     [(model_matrix_dict[t["anchor"]], model_matrix_dict[t["positive"]], model_matrix_dict[t["negative"]])
-#      for t in train_triplets],
-#     batch_size=CONFIG["batch_size"], shuffle=True
-# )
+#取得したデータセットからモデルの学習データ形式に整形
 train_loader = DataLoader(
     [(model_matrix_dict[t["anchor"]], model_matrix_dict[t["positive"]], model_matrix_dict[t["negative"]])
      for t in train_triplets],
@@ -58,6 +54,8 @@ loss_fn = TripletLoss(CONFIG["margin"])
 optimizer, scheduler, warmup_steps = build_optimizer_scheduler(
     model, CONFIG["lr1"],CONFIG["lr2"], CONFIG["weight_decay"], CONFIG["batch_size"], CONFIG["epochs"], len(train_triplets)
 )
+
+#weight&bias経由で学習状況を記録
 wandb.config.update({
     "optimizer": "AdamW",
     "encoder_lr": CONFIG["lr1"],
@@ -67,8 +65,8 @@ wandb.config.update({
     "warmup_steps": warmup_steps,
     "total_steps": len(train_triplets) // CONFIG["batch_size"] * CONFIG["epochs"]
 })
+
 # === 学習 ===
-# trainer = Trainer(model, optimizer, scheduler, loss_fn, DEVICE)
 trainer = Trainer(
     model, optimizer, scheduler, loss_fn, DEVICE,
     grad_threshold=CONFIG["grad_threshold"],
@@ -90,7 +88,4 @@ for epoch in range(CONFIG["epochs"]):
     })
     trainer.maybe_save(epoch, val_acc, timestamp)
 
-# === テスト評価 ===
-test_acc = trainer.validate(test_triplets, model_matrix_dict)
-wandb.log({"test_triplet_accuracy": test_acc})
 wandb.finish()
