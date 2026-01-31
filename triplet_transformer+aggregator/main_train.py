@@ -66,13 +66,7 @@ wandb.config.update({
 })
 
 # === 学習 ===
-trainer = Trainer(
-    model, optimizer, scheduler, loss_fn, DEVICE,
-    grad_threshold=CONFIG["grad_threshold"],
-    freeze_epochs=CONFIG["freeze_epochs"],
-    freeze_aggregator=CONFIG["freeze_aggregator"],
-    aggregator_fixed_lr=CONFIG["aggregator_fixed_lr"]
-)
+trainer = Trainer(model, optimizer, scheduler, loss_fn, DEVICE)
 for epoch in range(CONFIG["epochs"]):
     loss, grad_enc, grad_agg = trainer.train_epoch(train_loader, epoch)
     val_acc = trainer.validate(val_triplets, model_matrix_dict)
